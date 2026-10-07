@@ -14,16 +14,422 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          action: string
+          actor_name: string
+          created_at: string
+          details: string | null
+          entity_ref: string | null
+          entity_type: string
+          id: string
+        }
+        Insert: {
+          action: string
+          actor_name: string
+          created_at?: string
+          details?: string | null
+          entity_ref?: string | null
+          entity_type: string
+          id?: string
+        }
+        Update: {
+          action?: string
+          actor_name?: string
+          created_at?: string
+          details?: string | null
+          entity_ref?: string | null
+          entity_type?: string
+          id?: string
+        }
+        Relationships: []
+      }
+      bank_records: {
+        Row: {
+          amount: number
+          bank_name: string | null
+          id: string
+          member_id: string | null
+          reference: string | null
+          transacted_at: string
+        }
+        Insert: {
+          amount: number
+          bank_name?: string | null
+          id?: string
+          member_id?: string | null
+          reference?: string | null
+          transacted_at?: string
+        }
+        Update: {
+          amount?: number
+          bank_name?: string | null
+          id?: string
+          member_id?: string | null
+          reference?: string | null
+          transacted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_records_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contributions: {
+        Row: {
+          amount: number
+          collector_name: string | null
+          contributed_at: string
+          created_at: string
+          group_id: string
+          id: string
+          member_id: string
+          reference: string | null
+          source: string
+        }
+        Insert: {
+          amount: number
+          collector_name?: string | null
+          contributed_at?: string
+          created_at?: string
+          group_id: string
+          id?: string
+          member_id: string
+          reference?: string | null
+          source?: string
+        }
+        Update: {
+          amount?: number
+          collector_name?: string | null
+          contributed_at?: string
+          created_at?: string
+          group_id?: string
+          id?: string
+          member_id?: string
+          reference?: string | null
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contributions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contributions_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fraud_alerts: {
+        Row: {
+          alert_code: string
+          alert_type: string
+          confidence: number
+          contributing_factors: Json
+          contribution_id: string | null
+          created_at: string
+          explanation: string
+          group_id: string | null
+          id: string
+          member_id: string | null
+          risk_level: string
+          risk_score: number
+          status: string
+        }
+        Insert: {
+          alert_code: string
+          alert_type: string
+          confidence?: number
+          contributing_factors?: Json
+          contribution_id?: string | null
+          created_at?: string
+          explanation: string
+          group_id?: string | null
+          id?: string
+          member_id?: string | null
+          risk_level?: string
+          risk_score?: number
+          status?: string
+        }
+        Update: {
+          alert_code?: string
+          alert_type?: string
+          confidence?: number
+          contributing_factors?: Json
+          contribution_id?: string | null
+          created_at?: string
+          explanation?: string
+          group_id?: string | null
+          id?: string
+          member_id?: string | null
+          risk_level?: string
+          risk_score?: number
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraud_alerts_contribution_id_fkey"
+            columns: ["contribution_id"]
+            isOneToOne: false
+            referencedRelation: "contributions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_alerts_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraud_alerts_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          group_id: string
+          id: string
+          member_id: string
+          payout_position: number | null
+        }
+        Insert: {
+          group_id: string
+          id?: string
+          member_id: string
+          payout_position?: number | null
+        }
+        Update: {
+          group_id?: string
+          id?: string
+          member_id?: string
+          payout_position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "groups"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_members_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      groups: {
+        Row: {
+          contribution_amount: number
+          created_at: string
+          cycle_length_weeks: number
+          id: string
+          leader_name: string | null
+          location: string | null
+          name: string
+          status: string
+        }
+        Insert: {
+          contribution_amount?: number
+          created_at?: string
+          cycle_length_weeks?: number
+          id?: string
+          leader_name?: string | null
+          location?: string | null
+          name: string
+          status?: string
+        }
+        Update: {
+          contribution_amount?: number
+          created_at?: string
+          cycle_length_weeks?: number
+          id?: string
+          leader_name?: string | null
+          location?: string | null
+          name?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      members: {
+        Row: {
+          full_name: string
+          id: string
+          joined_at: string
+          national_id: string | null
+          phone: string | null
+          risk_score: number
+          status: string
+        }
+        Insert: {
+          full_name: string
+          id?: string
+          joined_at?: string
+          national_id?: string | null
+          phone?: string | null
+          risk_score?: number
+          status?: string
+        }
+        Update: {
+          full_name?: string
+          id?: string
+          joined_at?: string
+          national_id?: string | null
+          phone?: string | null
+          risk_score?: number
+          status?: string
+        }
+        Relationships: []
+      }
+      mobile_money_records: {
+        Row: {
+          amount: number
+          id: string
+          member_id: string | null
+          provider: string | null
+          reference: string | null
+          transacted_at: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          member_id?: string | null
+          provider?: string | null
+          reference?: string | null
+          transacted_at?: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          member_id?: string | null
+          provider?: string | null
+          reference?: string | null
+          transacted_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mobile_money_records_member_id_fkey"
+            columns: ["member_id"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string
+          id: string
+          phone: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id: string
+          phone?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string
+          id?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      reports: {
+        Row: {
+          created_at: string
+          generated_by: string | null
+          id: string
+          report_type: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          report_type: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          generated_by?: string | null
+          id?: string
+          report_type?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      system_settings: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "collector" | "group_leader" | "member" | "auditor"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +556,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "collector", "group_leader", "member", "auditor"],
+    },
   },
 } as const

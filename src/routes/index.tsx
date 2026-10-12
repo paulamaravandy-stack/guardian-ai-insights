@@ -4,7 +4,7 @@ import { ShieldCheck, BrainCircuit, GitCompareArrows, BellRing, ArrowRight, Hand
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "OSUSUGUARD AI — Explainable Fraud Detection for Osusu Savings Groups" },
+      { title: "OsusuGuard AI — Explainable Fraud Intelligence" },
       {
         name: "description",
         content:

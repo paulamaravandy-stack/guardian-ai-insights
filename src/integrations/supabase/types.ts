@@ -17,30 +17,36 @@ export type Database = {
       audit_logs: {
         Row: {
           action: string
+          actor_id: string | null
           actor_name: string
           created_at: string
           details: string | null
           entity_ref: string | null
           entity_type: string
           id: string
+          operation_ref: string | null
         }
         Insert: {
           action: string
+          actor_id?: string | null
           actor_name: string
           created_at?: string
           details?: string | null
           entity_ref?: string | null
           entity_type: string
           id?: string
+          operation_ref?: string | null
         }
         Update: {
           action?: string
+          actor_id?: string | null
           actor_name?: string
           created_at?: string
           details?: string | null
           entity_ref?: string | null
           entity_type?: string
           id?: string
+          operation_ref?: string | null
         }
         Relationships: []
       }
@@ -204,20 +210,29 @@ export type Database = {
         Row: {
           group_id: string
           id: string
+          joined_at: string
+          left_at: string | null
           member_id: string
           payout_position: number | null
+          status: string
         }
         Insert: {
           group_id: string
           id?: string
+          joined_at?: string
+          left_at?: string | null
           member_id: string
           payout_position?: number | null
+          status?: string
         }
         Update: {
           group_id?: string
           id?: string
+          joined_at?: string
+          left_at?: string | null
           member_id?: string
           payout_position?: number | null
+          status?: string
         }
         Relationships: [
           {
@@ -274,6 +289,7 @@ export type Database = {
           full_name: string
           id: string
           joined_at: string
+          member_number: string | null
           national_id: string | null
           phone: string | null
           risk_score: number
@@ -283,6 +299,7 @@ export type Database = {
           full_name: string
           id?: string
           joined_at?: string
+          member_number?: string | null
           national_id?: string | null
           phone?: string | null
           risk_score?: number
@@ -292,6 +309,7 @@ export type Database = {
           full_name?: string
           id?: string
           joined_at?: string
+          member_number?: string | null
           national_id?: string | null
           phone?: string | null
           risk_score?: number
@@ -420,6 +438,11 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      _admin_guard: { Args: never; Returns: string }
+      admin_add_member_to_group: {
+        Args: { _group_id: string; _member_id: string; _reason?: string }
+        Returns: string
+      }
       admin_list_users: {
         Args: never
         Returns: {
@@ -430,6 +453,17 @@ export type Database = {
           roles: Database["public"]["Enums"]["app_role"][]
         }[]
       }
+      admin_register_member: {
+        Args: {
+          _full_name: string
+          _group_id: string
+          _member_number: string
+          _national_id: string
+          _phone: string
+          _reason?: string
+        }
+        Returns: string
+      }
       admin_set_role: {
         Args: {
           _grant: boolean
@@ -437,6 +471,25 @@ export type Database = {
           _user_id: string
         }
         Returns: undefined
+      }
+      admin_swap_members: {
+        Args: {
+          _group_a: string
+          _group_b: string
+          _member_a: string
+          _member_b: string
+          _reason?: string
+        }
+        Returns: string
+      }
+      admin_transfer_member: {
+        Args: {
+          _from_group: string
+          _member_id: string
+          _reason?: string
+          _to_group: string
+        }
+        Returns: string
       }
       has_role: {
         Args: {

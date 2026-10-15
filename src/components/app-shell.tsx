@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { ThemePicker } from "@/components/theme-picker";
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -85,6 +86,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
         {nav}
         <div className="border-t border-sidebar-border p-3">
+          <ThemePicker />
           <Link
             to="/profile"
             className="mb-1 flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
@@ -122,6 +124,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           >
             {nav}
             <div className="border-t border-sidebar-border p-3">
+              <ThemePicker />
               <button
                 onClick={handleSignOut}
                 className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:text-destructive"
